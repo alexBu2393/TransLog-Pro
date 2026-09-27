@@ -1,0 +1,209 @@
+:root {
+    --tlo: #f4f5fa;
+    --tlo-karty: #ffffff;
+    --tekst: #1a1a2e;
+    --tekst-przytlumiony: #6b6b85;
+    --akcent: #2563eb;
+    --akcent2: #16a34a;
+    --fiolet: #7c3aed;
+    --ostrzezenie: #ea580c;
+    --niebezpieczenstwo: #dc2626;
+    --obramowanie: #e2e4ed;
+}
+
+body.ciemny {
+    --tlo: #0d0d16;
+    --tlo-karty: #171726;
+    --tekst: #f0f0f5;
+    --tekst-przytlumiony: #9494ad;
+    --obramowanie: #2a2a42;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: var(--tlo);
+    color: var(--tekst);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.uklad { display: flex; min-height: 100vh; }
+
+.pasek-boczny {
+    width: 250px;
+    background-color: var(--tlo-karty);
+    border-right: 1px solid var(--obramowanie);
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.logo-panelu { font-size: 1.25em; font-weight: bold; padding: 0 8px 14px; }
+.logo-panelu span { background: linear-gradient(135deg, var(--akcent), var(--fiolet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.logo-panelu em { font-style: normal; font-size: 0.7em; opacity: 0.7; }
+
+.nawigacja-boczna { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+
+.link-boczny {
+    background: none; border: none; text-align: left;
+    padding: 12px 14px; border-radius: 10px;
+    color: var(--tekst-przytlumiony); font-size: 0.95em; cursor: pointer;
+    transition: background-color 0.15s, transform 0.15s;
+}
+.link-boczny:hover { background-color: var(--tlo); transform: translateX(3px); }
+.link-boczny.aktywny { background: linear-gradient(135deg, var(--akcent), var(--fiolet)); color: white; }
+
+#przyciskPaleta, #przyciskMotyw {
+    background-color: var(--tlo);
+    border: 1px solid var(--obramowanie);
+    border-radius: 10px; padding: 10px; color: var(--tekst); cursor: pointer;
+}
+
+.glowna-kolumna { flex: 1; min-width: 0; }
+
+.gorny-pasek {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 24px 32px; border-bottom: 1px solid var(--obramowanie);
+}
+.gorny-pasek h1 { font-size: 1.4em; }
+.akcje-gornego-paska { display: flex; align-items: center; gap: 20px; }
+.data-dzis { color: var(--tekst-przytlumiony); }
+
+/* DZWONEK POWIADOMIEŃ */
+.dzwonek-powiadomien { position: relative; cursor: pointer; font-size: 1.3em; }
+.licznik-powiadomien {
+    position: absolute; top: -6px; right: -10px;
+    background-color: var(--niebezpieczenstwo); color: white;
+    font-size: 0.5em; font-weight: bold; padding: 2px 6px; border-radius: 10px;
+}
+.lista-powiadomien {
+    position: absolute; top: 36px; right: 0; width: 300px;
+    background-color: var(--tlo-karty); border: 1px solid var(--obramowanie);
+    border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    padding: 10px; z-index: 300;
+}
+.lista-powiadomien.ukryty { display: none; }
+.pozycja-powiadomienia { padding: 10px; border-bottom: 1px solid var(--obramowanie); font-size: 0.85em; }
+.pozycja-powiadomienia:last-child { border-bottom: none; }
+.pozycja-powiadomienia b { color: var(--akcent); }
+
+main { padding: 28px 32px; }
+.strona { display: none; }
+.strona.aktywna-strona { display: block; animation: pojaw 0.3s ease; }
+@keyframes pojaw { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
+
+.siatka-kart-stat { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 28px; }
+
+.karta-stat {
+    background-color: var(--tlo-karty); border: 1px solid var(--obramowanie);
+    border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px;
+    border-left: 4px solid transparent; transition: transform 0.2s;
+}
+.karta-stat:hover { transform: translateY(-3px); }
+.karta-niebieska { border-left-color: var(--akcent); }
+.karta-zielona { border-left-color: var(--akcent2); }
+.karta-fioletowa { border-left-color: var(--fiolet); }
+.karta-pomaranczowa { border-left-color: var(--ostrzezenie); }
+
+.ikona-stat { font-size: 1.8em; }
+.wartosc-stat { font-size: 1.6em; font-weight: bold; display: block; }
+.karta-stat p { color: var(--tekst-przytlumiony); font-size: 0.85em; }
+
+.siatka-wykresow { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.panel-wykresu { background-color: var(--tlo-karty); border: 1px solid var(--obramowanie); border-radius: 16px; padding: 20px; height: 320px; }
+.panel-wykresu-szeroki { height: 300px; margin-bottom: 18px; }
+.panel-wykresu h3 { margin-bottom: 14px; font-size: 1em; }
+
+.pasek-narzedzi { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
+.filtry-statusu { display: flex; gap: 8px; }
+.filtr-btn { background-color: var(--tlo-karty); border: 1px solid var(--obramowanie); color: var(--tekst-przytlumiony); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.85em; }
+.filtr-btn.aktywny-filtr { background: linear-gradient(135deg, var(--akcent), var(--fiolet)); color: white; border-color: transparent; }
+
+.przycisk-akcji {
+    background: linear-gradient(135deg, var(--akcent), var(--fiolet));
+    color: white; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: bold;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+.przycisk-akcji:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(37,99,235,0.35); }
+
+.kontener-tabeli { background-color: var(--tlo-karty); border: 1px solid var(--obramowanie); border-radius: 16px; overflow: hidden; }
+.tabela-danych { width: 100%; border-collapse: collapse; }
+.tabela-danych th { text-align: left; padding: 14px 18px; background-color: var(--tlo); color: var(--tekst-przytlumiony); font-size: 0.8em; text-transform: uppercase; }
+.tabela-danych td { padding: 14px 18px; border-top: 1px solid var(--obramowanie); }
+.tabela-danych tr:hover td { background-color: var(--tlo); }
+
+.znacznik-status { padding: 4px 12px; border-radius: 20px; font-size: 0.8em; font-weight: bold; display: inline-block; }
+.znacznik-status.w_trasie { background-color: rgba(37,99,235,0.15); color: var(--akcent); }
+.znacznik-status.wolny { background-color: rgba(22,163,74,0.15); color: var(--akcent2); }
+.znacznik-status.serwis { background-color: rgba(234,88,12,0.15); color: var(--ostrzezenie); }
+.znacznik-status.oplacona { background-color: rgba(22,163,74,0.15); color: var(--akcent2); }
+.znacznik-status.oczekuje { background-color: rgba(234,88,12,0.15); color: var(--ostrzezenie); }
+
+.btn-tabela { background: none; border: none; color: var(--tekst-przytlumiony); cursor: pointer; font-size: 1em; margin-right: 6px; }
+.btn-tabela.usun { color: var(--niebezpieczenstwo); }
+
+.siatka-kierowcow { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+.karta-kierowcy { background-color: var(--tlo-karty); border: 1px solid var(--obramowanie); border-radius: 16px; padding: 20px; text-align: center; transition: transform 0.2s; }
+.karta-kierowcy:hover { transform: translateY(-3px); }
+.awatar-kierowcy { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--akcent), var(--fiolet)); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.3em; margin: 0 auto 12px; }
+.karta-kierowcy h4 { margin-bottom: 4px; }
+.karta-kierowcy p { color: var(--tekst-przytlumiony); font-size: 0.85em; margin-bottom: 4px; }
+
+.tablica-kanban { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.kolumna-kanban { background-color: var(--tlo-karty); border: 1px solid var(--obramowanie); border-radius: 16px; padding: 16px; min-height: 300px; }
+.kolumna-kanban h3 { margin-bottom: 14px; font-size: 0.95em; }
+.karty-kolumny { display: flex; flex-direction: column; gap: 10px; min-height: 100px; }
+.karta-zlecenia { background-color: var(--tlo); border: 1px solid var(--obramowanie); border-radius: 10px; padding: 14px; cursor: grab; transition: box-shadow 0.15s; }
+.karta-zlecenia:hover { box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
+.karta-zlecenia.przeciagana { opacity: 0.4; }
+.karta-zlecenia h4 { font-size: 0.95em; margin-bottom: 6px; }
+.karta-zlecenia p { color: var(--tekst-przytlumiony); font-size: 0.8em; }
+.kolumna-kanban.podswietlona { outline: 2px dashed var(--akcent); }
+
+.legenda-mapy { display: flex; gap: 20px; align-items: center; margin-bottom: 14px; flex-wrap: wrap; font-size: 0.9em; color: var(--tekst-przytlumiony); }
+.kropka-legendy { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+.baza-legendy { margin-left: auto; font-weight: bold; }
+
+.kontener-mapy { height: 600px; border-radius: 16px; overflow: hidden; border: 1px solid var(--obramowanie); background-color: var(--tlo-karty); }
+
+.panel-raportu { background-color: var(--tlo-karty); border: 1px solid var(--obramowanie); border-radius: 16px; padding: 28px; max-width: 500px; margin-bottom: 18px; }
+.panel-raportu p { color: var(--tekst-przytlumiony); margin: 12px 0 18px; }
+
+.modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 200; }
+.modal.ukryty { display: none; }
+.zawartosc-modalu { background-color: var(--tlo-karty); padding: 26px; border-radius: 16px; width: 90%; max-width: 420px; display: flex; flex-direction: column; gap: 12px; }
+.zawartosc-modalu input, .zawartosc-modalu select { padding: 10px; border-radius: 8px; border: 1px solid var(--obramowanie); background-color: var(--tlo); color: var(--tekst); font-family: inherit; }
+.przyciski-modalu { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+.przyciski-modalu button { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; }
+.btn-modal-zapisz { background: linear-gradient(135deg, var(--akcent), var(--fiolet)); color: white; }
+.btn-modal-anuluj { background: none; border: 1px solid var(--obramowanie) !important; color: var(--tekst); }
+
+/* PALETA POLECEŃ (Ctrl+K) */
+.paleta-polecen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 500; display: flex; align-items: flex-start; justify-content: center; padding-top: 12vh; }
+.paleta-polecen.ukryty { display: none; }
+.okno-palety { background-color: var(--tlo-karty); border-radius: 14px; width: 90%; max-width: 500px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+.okno-palety input { width: 100%; padding: 18px 20px; border: none; background: none; color: var(--tekst); font-size: 1.05em; border-bottom: 1px solid var(--obramowanie); }
+.okno-palety input:focus { outline: none; }
+.wyniki-palety { max-height: 320px; overflow-y: auto; }
+.wynik-palety { padding: 14px 20px; cursor: pointer; color: var(--tekst-przytlumiony); font-size: 0.9em; }
+.wynik-palety:hover, .wynik-palety.podswietlony { background-color: var(--tlo); color: var(--tekst); }
+
+/* TOASTY */
+.powiadomienia-toast { position: fixed; bottom: 20px; right: 20px; z-index: 600; display: flex; flex-direction: column; gap: 10px; }
+.toast-el { background-color: var(--tlo-karty); border-left: 4px solid var(--akcent); color: var(--tekst); padding: 14px 18px; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.25); animation: wjazdT 0.3s ease; font-size: 0.9em; }
+@keyframes wjazdT { from { opacity: 0; transform: translateX(40px);} to { opacity: 1; transform: translateX(0);} }
+
+@media (max-width: 900px) {
+    .siatka-wykresow, .tablica-kanban { grid-template-columns: 1fr; }
+    .pasek-boczny { width: 70px; padding: 16px 8px; }
+    .logo-panelu span, .link-boczny, #przyciskPaleta, #przyciskMotyw { display: none; }
+}
+
+@media print {
+    .pasek-boczny, .gorny-pasek, .pasek-narzedzi, .modal, .paleta-polecen, .powiadomienia-toast { display: none !important; }
+}

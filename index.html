@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TransLog Pro — Panel Zarządzania Flotą</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="powiadomieniaToast" class="powiadomienia-toast"></div>
+
+    <div id="paletaPolecen" class="paleta-polecen ukryty">
+        <div class="okno-palety">
+            <input type="text" id="wejsciePalety" placeholder="Szukaj sekcji, pojazdu, kierowcy... (Esc aby zamknąć)">
+            <div id="wynikiPalety" class="wyniki-palety"></div>
+        </div>
+    </div>
+
+    <div class="uklad">
+
+        <aside class="pasek-boczny">
+            <div class="logo-panelu">🚛 <span>TransLog <em>Pro</em></span></div>
+            <nav class="nawigacja-boczna">
+                <button class="link-boczny aktywny" data-strona="dashboard">📊 Dashboard</button>
+                <button class="link-boczny" data-strona="pojazdy">🚚 Pojazdy</button>
+                <button class="link-boczny" data-strona="kierowcy">👤 Kierowcy</button>
+                <button class="link-boczny" data-strona="zlecenia">📦 Zlecenia</button>
+                <button class="link-boczny" data-strona="mapa">🗺️ Mapa floty</button>
+                <button class="link-boczny" data-strona="finanse">💰 Finanse</button>
+                <button class="link-boczny" data-strona="raporty">📄 Raporty</button>
+            </nav>
+            <button id="przyciskPaleta">⌘K Szukaj</button>
+            <button id="przyciskMotyw">🌙 Ciemny motyw</button>
+        </aside>
+
+        <div class="glowna-kolumna">
+
+            <header class="gorny-pasek">
+                <h1 id="tytulStrony">Dashboard</h1>
+                <div class="akcje-gornego-paska">
+                    <div class="data-dzis" id="dataDzis"></div>
+                    <div class="dzwonek-powiadomien" id="dzwonekPowiadomien">
+                        🔔<span class="licznik-powiadomien" id="licznikPowiadomien">0</span>
+                        <div class="lista-powiadomien ukryty" id="listaPowiadomien"></div>
+                    </div>
+                </div>
+            </header>
+
+            <main id="tresc">
+
+                <section id="dashboard" class="strona aktywna-strona">
+                    <div class="siatka-kart-stat">
+                        <div class="karta-stat karta-niebieska">
+                            <div class="ikona-stat">🚚</div>
+                            <div><span class="wartosc-stat" id="statPojazdy">0</span><p>Aktywne pojazdy</p></div>
+                        </div>
+                        <div class="karta-stat karta-zielona">
+                            <div class="ikona-stat">🛣️</div>
+                            <div><span class="wartosc-stat" id="statWTrasie">0</span><p>W trasie teraz</p></div>
+                        </div>
+                        <div class="karta-stat karta-fioletowa">
+                            <div class="ikona-stat">📦</div>
+                            <div><span class="wartosc-stat" id="statZlecenia">0</span><p>Zlecenia dzisiaj</p></div>
+                        </div>
+                        <div class="karta-stat karta-pomaranczowa">
+                            <div class="ikona-stat">⚠️</div>
+                            <div><span class="wartosc-stat" id="statSerwis">0</span><p>W serwisie</p></div>
+                        </div>
+                    </div>
+
+                    <div class="siatka-wykresow">
+                        <div class="panel-wykresu">
+                            <h3>Zlecenia — ostatnie 7 dni</h3>
+                            <canvas id="wykresZlecen"></canvas>
+                        </div>
+                        <div class="panel-wykresu">
+                            <h3>Status floty</h3>
+                            <canvas id="wykresStatusow"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="pojazdy" class="strona">
+                    <div class="pasek-narzedzi">
+                        <div class="filtry-statusu">
+                            <button class="filtr-btn aktywny-filtr" data-filtr="wszystkie">Wszystkie</button>
+                            <button class="filtr-btn" data-filtr="w_trasie">W trasie</button>
+                            <button class="filtr-btn" data-filtr="wolny">Wolne</button>
+                            <button class="filtr-btn" data-filtr="serwis">Serwis</button>
+                        </div>
+                        <button class="przycisk-akcji" id="przyciskDodajPojazd">+ Dodaj pojazd</button>
+                    </div>
+                    <div class="kontener-tabeli">
+                        <table class="tabela-danych">
+                            <thead>
+                                <tr><th>Nr rejestracyjny</th><th>Kierowca</th><th>Status</th><th>Lokalizacja</th><th>Przebieg</th><th></th></tr>
+                            </thead>
+                            <tbody id="tabelaPojazdow"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="kierowcy" class="strona">
+                    <div class="pasek-narzedzi">
+                        <div></div>
+                        <button class="przycisk-akcji" id="przyciskDodajKierowce">+ Dodaj kierowcę</button>
+                    </div>
+                    <div class="siatka-kierowcow" id="siatkaKierowcow"></div>
+                </section>
+
+                <section id="zlecenia" class="strona">
+                    <div class="pasek-narzedzi">
+                        <div></div>
+                        <button class="przycisk-akcji" id="przyciskDodajZlecenie">+ Nowe zlecenie</button>
+                    </div>
+                    <div class="tablica-kanban">
+                        <div class="kolumna-kanban" data-status="nowe"><h3>🆕 Nowe</h3><div class="karty-kolumny" id="kolumnaNowe"></div></div>
+                        <div class="kolumna-kanban" data-status="w_realizacji"><h3>🚛 W realizacji</h3><div class="karty-kolumny" id="kolumnaWRealizacji"></div></div>
+                        <div class="kolumna-kanban" data-status="dostarczone"><h3>✅ Dostarczone</h3><div class="karty-kolumny" id="kolumnaDostarczone"></div></div>
+                    </div>
+                </section>
+
+                <section id="mapa" class="strona">
+                    <div class="legenda-mapy">
+                        <span><i class="kropka-legendy" style="background:#2563eb"></i> W trasie</span>
+                        <span><i class="kropka-legendy" style="background:#16a34a"></i> Wolny</span>
+                        <span><i class="kropka-legendy" style="background:#ea580c"></i> Serwis</span>
+                        <span class="baza-legendy">🏠 Baza główna: Warszawa</span>
+                    </div>
+                    <div id="mapaFloty" class="kontener-mapy"></div>
+                </section>
+
+                <section id="finanse" class="strona">
+                    <div class="siatka-kart-stat">
+                        <div class="karta-stat karta-zielona">
+                            <div class="ikona-stat">💰</div>
+                            <div><span class="wartosc-stat" id="statPrzychod">0 zł</span><p>Przychód (ten miesiąc)</p></div>
+                        </div>
+                        <div class="karta-stat karta-niebieska">
+                            <div class="ikona-stat">🧾</div>
+                            <div><span class="wartosc-stat" id="statFaktury">0</span><p>Wystawione faktury</p></div>
+                        </div>
+                        <div class="karta-stat karta-pomaranczowa">
+                            <div class="ikona-stat">⏳</div>
+                            <div><span class="wartosc-stat" id="statOczekujace">0 zł</span><p>Oczekujące płatności</p></div>
+                        </div>
+                    </div>
+                    <div class="panel-wykresu panel-wykresu-szeroki">
+                        <h3>Przychody — ostatnie 6 miesięcy</h3>
+                        <canvas id="wykresPrzychodow"></canvas>
+                    </div>
+                    <div class="kontener-tabeli">
+                        <table class="tabela-danych">
+                            <thead><tr><th>Nr faktury</th><th>Klient</th><th>Kwota</th><th>Status</th></tr></thead>
+                            <tbody id="tabelaFaktur"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="raporty" class="strona">
+                    <div class="panel-raportu">
+                        <h3>Eksport danych</h3>
+                        <p>Pobierz aktualną listę pojazdów jako plik CSV — otworzysz go w Excelu.</p>
+                        <button class="przycisk-akcji" id="przyciskEksportuj">⬇ Eksportuj pojazdy do CSV</button>
+                    </div>
+                    <div class="panel-raportu">
+                        <h3>Drukuj raport floty</h3>
+                        <p>Otwórz okno drukowania z czystym, gotowym do wydruku podsumowaniem.</p>
+                        <button class="przycisk-akcji" id="przyciskDrukuj">🖨 Drukuj raport</button>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <div id="modalUniwersalny" class="modal ukryty">
+        <div class="zawartosc-modalu" id="zawartoscModalu"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="skrypt.js"></script>
+</body>
+</html>
